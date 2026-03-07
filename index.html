@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tushar Tech Zone</title>
+
+  <script src='//libtl.com/sdk.js' data-zone='8690632' data-sdk='show_8690632'></script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #121212; color: #ffffff; }
+    .dark-bg { background-color: #121212; }
+    .card-bg { background-color: #1e1e1e; }
+    .border-accent { border-color: #ff8c00; }
+    .text-accent { color: #ff8c00; }
+    .btn, .btn-accent, .btn-outline-accent { transition: all 0.2s ease-in-out; transform: scale(1); }
+    .btn:active, .btn-accent:active, .btn-outline-accent:active { transform: scale(0.95); }
+    .btn-accent { background-color: #ff8c00; color: #121212; font-weight: bold; }
+    .btn-accent:hover { background-color: #e67e00; }
+    .input-field { background-color: #2c2c2c; border: 1px solid #444; color: white; }
+    .main-page { display: none; }
+    .main-page.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
+    .sub-page { display: none; }
+    .sub-page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .ip-warning { background-color: #dc2626; color: white; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; display: none; }
+  </style>
+</head>
+
+<body class="max-w-md mx-auto">
+
+  <div id="loader" class="hidden fixed inset-0 dark-bg bg-opacity-75 flex items-center justify-center z-50">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-accent"></div>
+  </div>
+
+  <div id="ip-warning" class="ip-warning">
+    ⚠️ Warning: Multiple device detected! You can only use one device per account.
+  </div>
+
+  <div id="timer-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-6">
+    <div class="bg-gray-800 rounded-lg p-8 w-full max-w-sm text-center">
+      <h3 class="text-xl font-bold mb-4 text-accent">Please Wait</h3>
+      <div class="text-4xl font-bold mb-4" id="countdown-display">0</div>
+      <p class="text-gray-400 text-sm">কাজটি সম্পন্ন করতে অপেক্ষা করুন। ব্রাউজার বা অ্যাপ বন্ধ করবেন না।</p>
+    </div>
+  </div>
+
+  <div id="auth-section" class="min-h-screen p-6 flex-col justify-center main-page active">
+    <h1 class="text-3xl font-bold text-center mb-2 text-accent">Tushar Tech Zone</h1>
+    <div id="auth-container">
+      <div id="login-view">
+        <input id="login-email" type="email" placeholder="Email" class="w-full p-3 rounded-lg input-field mb-4">
+        <input id="login-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg input-field mb-4">
+        <button id="login-btn" class="w-full p-3 rounded-lg btn-accent mb-4">Login</button>
+        <p class="text-center text-gray-400">Don't have an account? <a href="#" id="show-signup" class="text-accent">Sign Up</a></p>
+      </div>
+      <div id="signup-view" class="hidden">
+        <input id="signup-name" type="text" placeholder="Full Name" class="w-full p-3 rounded-lg input-field mb-4">
+        <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 rounded-lg input-field mb-4">
+        <input id="signup-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg input-field mb-4">
+        <button id="signup-btn" class="w-full p-3 rounded-lg btn-accent mb-4">Sign Up</button>
+        <p class="text-center text-gray-400">Already have an account? <a href="#" id="show-login" class="text-accent">Login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="app-container" class="min-h-screen flex-col main-page">
+    <header class="flex items-center justify-between p-4 sticky top-0 bg-opacity-80 backdrop-blur-md z-10 dark-bg">
+      <h1 class="text-xl font-bold">Tushar Tech Zone</h1>
+      <i data-lucide="user" class="w-6 h-6 cursor-pointer" onclick="navigateTo('profile-page')"></i>
+    </header>
+
+    <main class="flex-grow">
+      <div id="home-page" class="p-4 space-y-6 sub-page active">
+        <div class="card-bg p-4 rounded-lg flex items-center justify-between border-l-4 border-accent">
+          <div>
+            <p class="text-gray-400 text-sm">Your Balance</p>
+            <p class="text-3xl font-bold text-white"><span id="coin-balance">0</span> Coins</p>
+          </div>
+          <button onclick="navigateTo('wallet-page')" class="bg-white text-black font-semibold px-6 py-2 rounded-lg">Withdraw</button>
+        </div>
+
+        <section class="space-y-3">
+          <h2 class="text-lg font-semibold">Daily Tasks</h2>
+          <div class="bg-orange-500 p-3 rounded-lg flex items-center justify-between text-black">
+            <div class="flex items-center space-x-3">
+              <span class="text-3xl">🤩</span>
+              <div><h3 class="font-bold">Watch Video Ad</h3><p class="text-xs">Instant Reward</p></div>
+            </div>
+            <button class="bg-white text-orange-500 font-bold px-6 py-2 rounded-lg text-sm" onclick="claimReward('interstitial')">Claim</button>
+          </div>
+          <div class="card-bg p-3 rounded-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <span class="text-3xl">🌐</span>
+              <div><h3 class="font-semibold">Website Visit 1</h3><p class="text-xs text-gray-400">Wait 20 Seconds</p></div>
+            </div>
+            <button class="bg-blue-600 text-white font-bold px-6 py-2 rounded-lg text-sm" onclick="visitWebsite('https://iqxltd.blogspot.com', 20)">Visit</button>
+          </div>
+        </section>
+      </div>
+
+      <div id="wallet-page" class="p-4 sub-page">
+        <h2 class="text-xl font-bold text-center mb-4">My Wallet</h2>
+        <div class="card-bg p-4 rounded-lg">
+          <p id="wallet-coin-balance" class="text-3xl font-bold text-accent mb-4">0 Coins</p>
+          <input id="withdraw-amount" type="number" placeholder="Amount" class="w-full p-3 rounded-lg input-field mb-3">
+          <select id="withdraw-method" class="w-full p-3 rounded-lg input-field mb-3">
+            <option value="Bkash">Bkash</option><option value="Nagad">Nagad</option>
+          </select>
+          <input id="payment-number" type="number" placeholder="Number" class="w-full p-3 rounded-lg input-field mb-3">
+          <button id="withdraw-btn" class="w-full p-3 rounded-lg btn-accent">Withdraw</button>
+        </div>
+      </div>
+
+      <div id="profile-page" class="p-4 sub-page text-center">
+        <h2 id="profile-name" class="text-xl font-bold mb-2">User</h2>
+        <p id="profile-email" class="text-gray-400 mb-6">...</p>
+        <button id="logout-btn" class="w-full p-3 rounded-lg bg-red-600 font-bold">Logout</button>
+      </div>
+    </main>
+
+    <nav class="bottom-nav sticky bottom-0 grid grid-cols-3 py-2 card-bg border-t border-gray-800 text-center">
+      <a href="#" class="nav-link active" data-page="home-page"><i data-lucide="home" class="mx-auto"></i>Home</a>
+      <a href="#" class="nav-link" data-page="wallet-page"><i data-lucide="wallet" class="mx-auto"></i>Wallet</a>
+      <a href="#" class="nav-link" data-page="profile-page"><i data-lucide="user" class="mx-auto"></i>Profile</a>
+    </nav>
+  </div>
+
+  <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[100] p-4">
+    <div class="bg-gray-800 rounded-lg p-6 w-full max-w-xs text-center border border-accent">
+      <p id="alert-message" class="mb-4 font-medium text-sm"></p>
+      <button id="alert-ok-btn" class="btn-accent px-8 py-2 rounded-lg text-sm">OK</button>
+    </div>
+  </div>
+
+  <script type="module">
+    // --- আপনার নতুন Firebase Config ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyDB15lIz0BwUaErArj-ooETB79iPCZK3D4",
+      authDomain: "bot-864b3.firebaseapp.com",
+      projectId: "bot-864b3",
+      storageBucket: "bot-864b3.firebasestorage.app",
+      messagingSenderId: "82198701869",
+      appId: "1:82198701869:web:3c099992e1c64e285355a4",
+      measurementId: "G-2JV7X0N50W"
+    };
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let userData = null;
+    let deviceId = localStorage.getItem('device_id') || 'dev_' + Math.random().toString(36).substring(7);
+    localStorage.setItem('device_id', deviceId);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (snap.exists()) {
+          userData = snap.data();
+          // Device Security Check
+          if (userData.registeredDevice && userData.registeredDevice.deviceId !== deviceId) {
+            showAlert("⚠️ Multiple device detected!");
+            await signOut(auth); return;
+          }
+        } else {
+          userData = { uid: user.uid, balance: 50, email: user.email, name: user.displayName || "User", registeredDevice: { deviceId } };
+          await setDoc(doc(db, "users", user.uid), userData);
+        }
+        updateUI();
+        showMainPage('app-container');
+      } else {
+        showMainPage('auth-section');
+      }
+    });
+
+    window.visitWebsite = (url, seconds) => {
+      window.open(url, '_blank');
+      startTimer(seconds, 50);
+    };
+
+    window.claimReward = async (type) => {
+      if (typeof window.show_8690632 === 'function') {
+        await window.show_8690632();
+        addBalance(50);
+      } else {
+        showAlert("Ad failed to load.");
+      }
+    };
+
+    function startTimer(sec, reward) {
+      document.getElementById('timer-modal').classList.remove('hidden');
+      let timeLeft = sec;
+      const int = setInterval(() => {
+        timeLeft--;
+        document.getElementById('countdown-display').textContent = timeLeft;
+        if(timeLeft <= 0) {
+          clearInterval(int);
+          document.getElementById('timer-modal').classList.add('hidden');
+          addBalance(reward);
+        }
+      }, 1000);
+    }
+
+    async function addBalance(amt) {
+      const newBal = (userData.balance || 0) + amt;
+      await updateDoc(doc(db, "users", currentUser.uid), { balance: newBal });
+      userData.balance = newBal;
+      updateUI();
+      showAlert(`You won ${amt} coins!`);
+    }
+
+    function updateUI() {
+      document.getElementById('coin-balance').textContent = userData.balance;
+      document.getElementById('wallet-coin-balance').textContent = userData.balance + " Coins";
+      document.getElementById('profile-name').textContent = userData.name;
+    }
+
+    window.navigateTo = (id) => {
+      document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    };
+
+    function showMainPage(id) {
+      document.querySelectorAll('.main-page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function showAlert(m) {
+      document.getElementById('alert-message').textContent = m;
+      document.getElementById('custom-alert').classList.remove('hidden');
+      document.getElementById('alert-ok-btn').onclick = () => document.getElementById('custom-alert').classList.add('hidden');
+    }
+
+    // Auth Listeners
+    document.getElementById('login-btn').onclick = () => signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value).catch(e => showAlert(e.message));
+    document.getElementById('signup-btn').onclick = () => createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-password').value).then(res => updateProfile(res.user, {displayName: document.getElementById('signup-name').value})).catch(e => showAlert(e.message));
+    document.getElementById('logout-btn').onclick = () => signOut(auth);
+    document.getElementById('show-signup').onclick = () => { document.getElementById('login-view').classList.add('hidden'); document.getElementById('signup-view').classList.remove('hidden'); };
+    document.getElementById('show-login').onclick = () => { document.getElementById('signup-view').classList.add('hidden'); document.getElementById('login-view').classList.remove('hidden'); };
+    
+  </script>
+</body>
+</html>
